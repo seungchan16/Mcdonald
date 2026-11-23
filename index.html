@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>McDonald's Korea</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --mcd-red: #DA291C;
+            --mcd-yellow: #FFC72C;
+            --mcd-dark: #27251F;
+            --mcd-light: #F8F9FA;
+            --mcd-gray: #E0E0E0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Malgun Gothic', 'Noto Sans KR', sans-serif;
+        }
+
+        body {
+            background-color: var(--mcd-light);
+            color: var(--mcd-dark);
+            padding-bottom: 60px;
+        }
+
+        /* Header Navigation */
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--mcd-red);
+            font-size: 24px;
+            font-weight: 800;
+        }
+
+        .logo i {
+            color: var(--mcd-yellow);
+            font-size: 32px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--mcd-dark);
+            font-weight: 700;
+            font-size: 16px;
+            transition: color 0.2s;
+        }
+
+        nav a:hover {
+            color: var(--mcd-red);
+        }
+
+        .cart-icon-btn {
+            background: var(--mcd-yellow);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+        }
+
+        .cart-count {
+            background: var(--mcd-red);
+            color: white;
+            border-radius: 50%;
+            padding: 2px 7px;
+            font-size: 12px;
+        }
+
+        /* Hero Banner */
+        .hero {
+            background: linear-gradient(135deg, var(--mcd-red) 0%, #a01309 100%);
+            color: white;
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .hero h1 {
+            font-size: 36px;
+            margin-bottom: 12px;
+        }
+
+        .hero p {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        /* Container & Categories */
+        .main-container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .categories {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        .category-btn {
+            background: white;
+            border: 2px solid var(--mcd-gray);
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .category-btn.active, .category-btn:hover {
+            background: var(--mcd-red);
+            color: white;
+            border-color: var(--mcd-red);
+        }
+
+        /* Menu Grid */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        .menu-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .menu-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            background-color: #f9f9f9;
+        }
+
+        .menu-info {
+            padding: 15px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .menu-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .menu-price {
+            color: var(--mcd-red);
+            font-weight: 800;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        .add-cart-btn {
+            width: 100%;
+            background: var(--mcd-yellow);
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .add-cart-btn:hover {
+            background: #e5b324;
+        }
+
+        /* Cart Slide Drawer */
+        .cart-drawer {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 100%;
+            max-width: 380px;
+            height: 100%;
+            background: white;
+            box-shadow: -5px 0 15px rgba(0,0,0,0.2);
+            transition: right 0.3s ease;
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cart-drawer.open {
+            right: 0;
+        }
+
+        .cart-header {
+            background: var(--mcd-red);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .close-cart {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .cart-items {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--mcd-gray);
+        }
+
+        .cart-footer {
+            padding: 20px;
+            border-top: 2px solid var(--mcd-gray);
+            background: #fafafa;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            background: var(--mcd-red);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 28px; }
+            .hero p { font-size: 15px; }
+            .menu-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
+            .menu-img { height: 130px; }
+            .menu-title { font-size: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-container">
+            <a href="#" class="logo">
+                <i class="fa-solid fa-m"></i>
+                <span>McDonald's</span>
+            </a>
+            <nav>
+                <ul>
+                    <li><a href="#menu">메뉴</a></li>
+                    <li><a href="#promo">이벤트</a></li>
+                </ul>
+            </nav>
+            <button class="cart-icon-btn" onclick="toggleCart()">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span>장바구니</span>
+                <span class="cart-count" id="cartCount">0</span>
+            </button>
+        </div>
+    </header>
+
+    <section class="hero">
+        <h1>맛있는 순간, 맥도날드</h1>
+        <p>신선한 재료로 만드는 프리미엄 버거를 지금 주문해 보세요!</p>
+    </section>
+
+    <main class="main-container" id="menu">
+        <div class="categories">
+            <button class="category-btn active" onclick="filterMenu('all', event)">전체</button>
+            <button class="category-btn" onclick="filterMenu('burger', event)">버거</button>
+            <button class="category-btn" onclick="filterMenu('side', event)">사이드</button>
+            <button class="category-btn" onclick="filterMenu('drink', event)">음료</button>
+        </div>
+
+        <div class="menu-grid" id="menuGrid">
+            <!-- Dynamic Menu Items -->
+        </div>
+    </main>
+
+    <div class="cart-drawer" id="cartDrawer">
+        <div class="cart-header">
+            <h2>장바구니</h2>
+            <button class="close-cart" onclick="toggleCart()">&times;</button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <p style="text-align: center; color: #888; margin-top: 40px;">장바구니가 비어 있습니다.</p>
+        </div>
+        <div class="cart-footer">
+            <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 18px;">
+                <span>총 결제금액:</span>
+                <span id="totalPrice">0원</span>
+            </div>
+            <button class="checkout-btn" onclick="checkout()">주문하기</button>
+        </div>
+    </div>
+
+    <script>
+        const menuData = [
+            { id: 1, name: '빅맥®', category: 'burger', price: 5500, img: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500' },
+            { id: 2, name: '맥스파이시® 상하이 버거', category: 'burger', price: 5500, img: 'https://images.unsplash.com/photo-1550547660-d9450f859349?w=500' },
+            { id: 3, name: '1955® 버거', category: 'burger', price: 6400, img: 'https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=500' },
+            { id: 4, name: '후렌치 후라이', category: 'side', price: 2300, img: 'https://images.unsplash.com/photo-1576107232684-1279f3908594?w=500' },
+            { id: 5, name: '맥너겟® 6조각', category: 'side', price: 3800, img: 'https://images.unsplash.com/photo-1562967914-608f82629710?w=500' },
+            { id: 6, name: '코카-콜라', category: 'drink', price: 1900, img: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=500' }
+        ];
+
+        let cart = [];
+
+        function renderMenu(items) {
+            const grid = document.getElementById('menuGrid');
+            grid.innerHTML = items.map(item => `
+                <div class="menu-card">
+                    <img src="${item.img}" alt="${item.name}" class="menu-img">
+                    <div class="menu-info">
+                        <div>
+                            <div class="menu-title">${item.name}</div>
+                            <div class="menu-price">${item.price.toLocaleString()}원</div>
+                        </div>
+                        <button class="add-cart-btn" onclick="addToCart(${item.id})">담기</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterMenu(category, event) {
+            document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+            if (event && event.target) {
+                event.target.classList.add('active');
+            }
+            
+            if (category === 'all') {
+                renderMenu(menuData);
+            } else {
+                renderMenu(menuData.filter(i => i.category === category));
+            }
+        }
+
+        function addToCart(id) {
+            const item = menuData.find(i => i.id === id);
+            cart.push(item);
+            updateCart();
+        }
+
+        function updateCart() {
+            document.getElementById('cartCount').innerText = cart.length;
+            const cartItemsContainer = document.getElementById('cartItems');
+            
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = '<p style="text-align: center; color: #888; margin-top: 40px;">장바구니가 비어 있습니다.</p>';
+            } else {
+                cartItemsContainer.innerHTML = cart.map((item, index) => `
+                    <div class="cart-item">
+                        <div>
+                            <div style="font-weight: bold;">${item.name}</div>
+                            <div style="color: var(--mcd-red); font-size: 14px;">${item.price.toLocaleString()}원</div>
+                        </div>
+                        <button onclick="removeFromCart(${index})" style="background: none; border: none; color: #999; cursor: pointer;">삭제</button>
+                    </div>
+                `).join('');
+            }
+
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            document.getElementById('totalPrice').innerText = total.toLocaleString() + '원';
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCart();
+        }
+
+        function toggleCart() {
+            document.getElementById('cartDrawer').classList.toggle('open');
+        }
+
+        function checkout() {
+            if (cart.length === 0) {
+                alert('장바구니가 비어 있습니다.');
+                return;
+            }
+            alert('주문이 정상적으로 완료되었습니다!');
+            cart = [];
+            updateCart();
+            toggleCart();
+        }
+
+        // Initial Render
+        renderMenu(menuData);
+    </script>
+</body>
+</html>
